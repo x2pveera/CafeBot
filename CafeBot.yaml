@@ -1,0 +1,345 @@
+metadata:
+  platformVersion: "1.1"
+main: true
+name: "CafeteriaAssistanceBot"
+context:
+  variables:
+    iresult: "nlpresult"
+    foods: "string"
+    beverages: "string"
+    dummy: "string"
+    orderedFood: "string"
+    orderedFoodImage: "string"
+    itemSize: "ItemSize"
+    location: "string"
+    cardsRangeStart: "int"
+    feedback: "string"
+defaultTransitions:
+  error: "DefaultErrorHandler"
+  actions:
+    unexpectedAction: "HandleUnexpectedAction"
+    ExitFlow: "exitFlow"
+states:
+  setCardsRangeStart:
+    component: "System.SetVariable"
+    properties:
+      variable: "cardsRangeStart"
+      value: 0
+    transitions: {}
+  LoadFoods:
+    component: "System.SetVariable"
+    properties:
+      variable: "foods"
+      value:
+      - name: "Afghani Chicken Biryani"
+        description: "We took the all-time favorite and made it better by giving it an Afghani touch."
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522685529/CafeteriaAssistant/Afghani-Chicken-Biryani_2.jpg"
+      - name: "Black Forest Cake"
+        description: "Black forest cake with a sinful layer of rich chocolate mousse."
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522685529/CafeteriaAssistant/836x663-Black-Forest.jpg"
+      - name: "Big Crunch Chicken Classic Burger"
+        description: "Juicy chicken patty seared to perfection. Then, stuffed between soft oatmeal buns along with fresh veggies. So good, you will be tongue-tied."
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522685528/CafeteriaAssistant/Big-Crunch-Chicken-Classic-Burger.jpg"
+      - name: "Big Crunch Veg Cheese Burger"
+        description: "Flavourful veggie patty cooked to perfection. Then, stuffed between soft oatmeal buns with handpicked veggies. Sure to make your eye widen and jaw drop."
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522685528/CafeteriaAssistant/Big-Crunch-Veg-Cheese-Burger_2.jpg"
+      - name: "Chilli Cheese Toastizza"
+        description: "Get cheesy with this crispy toast topped with onions, tomatoes and capsicum, loaded with cheese and sprinkled with chilli flakes"
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522685528/CafeteriaAssistant/Chilli-Cheese-Toastizza_2.jpg"
+      - name: "Egg Wrap"
+        description: "For the Desi at heart! Classic Indian egg bhurji with onions, capsicum and paprika, folded into a scrumptious Malabar paratha wrap."
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522685529/CafeteriaAssistant/Egg-Wrap_2.jpg"
+      - name: "Crackling Brownie"
+        description: "A Rich gooey classic American fudge brownie"
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522685529/CafeteriaAssistant/836x663-Brownie.jpg"
+      - name: "Crispy Veg Wrap"
+        description: "We made veggies taste good. You can thank us later."
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522685528/CafeteriaAssistant/CrispyVeg_2.jpg"
+    transitions: {}
+  
+  LoadBeverages:
+    component: "System.SetVariable"
+    properties:
+      variable: "beverages"
+      value:
+      - name: "Alphonso Mango Milkshake"
+        description: "Discover delight in every sip with this divine, sumptuous mango treat."
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522769202/CafeteriaAssistant/mango-milkshake-recipe.jpg"
+      - name: "Aztec single origin Coffee"
+        description: "A delightful international gourment blend that includes a double shot of espresso brewed from a blend of imported coffee beans topped with steamed and foamed milk."
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522769201/CafeteriaAssistant/Aztec_single_origin_Coffee.jpg"
+      - name: "Classic Lemonade"
+        description: "Get refreshed! Introducing a lemonade with a touch of mint and ginger that make for the perfect sip, when you are chillin'."
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522769202/CafeteriaAssistant/Classic_Lemonade.jpg"
+      - name: "Green Tea"
+        description: "An aromatic tea that does wonders for your health. The leaves are mixed with Jasmine flower bits that give a distinct fragrance and flavour. Can be served either with milk or lemon."
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522769202/CafeteriaAssistant/Green_Tea.jpg"
+      - name: "Cool Blue"
+        description: "Cool Blue, a syrupy blue blend skating on crushed ice! Zap away that summer heat and enjoy a tall glass of pure shock, as you plunge your mind into CCD's summer favourite!"
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522769201/CafeteriaAssistant/Cool_Blue.jpg"
+      - name: "Macchiato"
+        description: "Macchiato, meaning 'Marked' is bold espresso with a small amount of foamed milk to compliment it."
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522769202/CafeteriaAssistant/Macchiato.jpg"
+      - name: "Cold Cocoa Latte"
+        description: "Smooth, creamy ice cold chocolate milkshake. Who can say no to this classic beverage?"
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522769201/CafeteriaAssistant/Cold_Cocoa_Latte.jpg"
+      - name: "Café Americano"
+        description: "A double shot of espresso topped with hot water, served with a complimentary milk on the side."
+        image: "http://res.cloudinary.com/psjsaravana/image/upload/v1522769202/CafeteriaAssistant/Caf%C3%A9_Americano.jpg"
+    transitions: {}  
+  Intent:
+    component: "System.Intent"
+    properties:
+      confidenceThreshold: 0.5
+      variable: "iresult"
+    transitions:
+      actions:
+        unresolvedIntent: "Unresolved"
+        OrderBeverages: "OrderBeverages"
+        ShowMenu: "ShowMenu"
+        OrderFood: "OrderFood"
+  Unresolved:
+    component: "System.CommonResponse"
+    properties:
+      metadata:
+        responseItems:
+        - type: "text"
+          text: "Sorry, I don't understand you, I am not human. Please try another\
+            \ sentence."
+          name: "Sorry"
+          separateBubbles: true
+      processUserMessage: false
+    transitions:
+      return: "done"
+  ShowMenu:
+    component: "System.CommonResponse"
+    properties:
+      metadata:
+        responseItems:
+        - type: "text"
+          text: "Hello ${profile.firstName}, this is our menu for today:"
+          name: "hello"
+          separateBubbles: true
+          actions:
+          - label: "Food"
+            keyword: "1"
+            type: "postback"
+            payload:
+              action: "Food"
+            name: "Food"
+          - label: "Beverages"
+            keyword: "2"
+            type: "postback"
+            payload:
+              action: "Beverages"
+            name: "Beverages"         
+      processUserMessage: true
+    transitions:
+      actions:
+        Food: "OrderFood"
+        Beverages: "OrderBeverages"
+        textReceived: "Intent"
+  OrderFood:
+    component: "System.CommonResponse"
+    properties:
+      metadata:
+        responseItems:
+        - type: "text"
+          text: "Here are our food items you can order today"
+          separateBubbles: true
+          rendered: "<#if cardsRangeStart?number == 0>true<#else>false</#if>"
+          name: "Our foods"
+        - type: "text"
+          text: "Some more items for you:"
+          separateBubbles: true
+          rendered: "<#if cardsRangeStart?number != 0>true<#else>false</#if>"
+          name: "More food items"
+        - type: "cards"
+          cardLayout: "vertical"
+          name: "FoodCards"
+          actions:
+          - label: "More food items"
+            type: "postback"
+            rendered: "<#if cardsRangeStart?number+4 < foods.value?size>true<#else>false</#if>"
+            payload:
+              action: "more"
+              variables:
+                cardsRangeStart: "${cardsRangeStart?number+4}"
+            name: "More"
+          cards:
+          - title: "${foods.name}"
+            description: "${foods.description}"
+            imageUrl: "${foods.image}"
+            name: "FoodCard"
+            iteratorVariable: "foods"
+            rangeStart: "${cardsRangeStart}"
+            rangeSize: "4"
+            actions:
+            - label: "Order Now"
+              type: "postback"
+              payload:
+                action: "order"
+                variables:
+                  orderedFood: "${foods.name}"
+                  orderedFoodImage: "${foods.image}"
+              name: "Order"
+          channelCustomProperties:
+          - channel: "facebook"
+            properties:
+              top_element_style: "large"
+      processUserMessage: true
+    transitions:
+      actions:
+        order: "AskItemSize"
+        more: "OrderFood"
+        textReceived: "Intent"
+  
+  OrderBeverages:  
+    component: "System.CommonResponse"
+    properties:
+      metadata:
+        responseItems:
+        - type: "text"
+          text: "Here are our beverages you can order today"
+          separateBubbles: true
+          rendered: "<#if cardsRangeStart?number == 0>true<#else>false</#if>"
+          name: "Our beverages"
+        - type: "text"
+          text: "Some more items for you:"
+          separateBubbles: true
+          rendered: "<#if cardsRangeStart?number != 0>true<#else>false</#if>"
+          name: "More beverages"
+        - type: "cards"
+          cardLayout: "vertical"
+          name: "BeveragesCards"
+          actions:
+          - label: "More beverages items"
+            type: "postback"
+            rendered: "<#if cardsRangeStart?number+4 < beverages.value?size>true<#else>false</#if>"
+            payload:
+              action: "more"
+              variables:
+                cardsRangeStart: "${cardsRangeStart?number+4}"
+            name: "More"
+          cards:
+          - title: "${beverages.name}"
+            description: "${beverages.description}"
+            imageUrl: "${beverages.image}"
+            name: "BeveragesCard"
+            iteratorVariable: "beverages"
+            rangeStart: "${cardsRangeStart}"
+            rangeSize: "4"
+            actions:
+            - label: "Order Now"
+              type: "postback"
+              payload:
+                action: "order"
+                variables:
+                  orderedFood: "${beverages.name}"
+                  orderedFoodImage: "${beverages.image}"
+              name: "Order"
+          channelCustomProperties:
+          - channel: "facebook"
+            properties:
+              top_element_style: "large"
+      processUserMessage: true
+    transitions:
+      actions:
+        order: "AskItemSize"
+        more: "OrderFood"
+        textReceived: "Intent"
+  AskItemSize:
+    component: "System.CommonResponse"
+    properties:
+      variable: "itemSize"
+      nlpResultVariable: "iresult"
+      maxPrompts: 2
+      metadata:
+        responseItems:
+        - type: "text"
+          text: "<#if user.botsUserError == 'true'>Invalid size, please try again.\
+            \ </#if>What size do you want?"
+          name: "What size"
+          separateBubbles: true
+          actions:
+          - label: "${enumValue}"
+            type: "postback"
+            payload:
+              action: ""
+              variables:
+                itemSize: "${enumValue}"
+            name: "size"
+            iteratorVariable: "itemSize.type.enumValues"
+      processUserMessage: true
+    transitions:
+      actions:
+        cancel: "Intent"
+      next: "AskLocation"
+  AskLocation:
+    component: "System.CommonResponse"
+    properties:
+      variable: "location"
+      metadata:
+        responseItems:
+        - text: "To which location do you want the item to be delivered?"
+          type: "text"
+          name: "What location"
+          separateBubbles: true
+        globalActions:
+        - label: "Send Location"
+          type: "location"
+          name: "SendLocation"
+      processUserMessage: true
+    transitions:
+      actions:
+        cancel: "Intent"
+      next: "Confirmation"
+  Confirmation:
+    component: "System.CommonResponse"
+    properties:
+      metadata:
+        responseItems:
+        - text: "Thank you for your order, your ${itemSize} ${orderedFood} \
+            \ will be delivered in 10 minutes at GPS position ${location.value.latitude},${location.value.longitude}!"
+          type: "text"
+          name: "conf"
+          separateBubbles: true
+        - type: "attachment"
+          attachmentType: "image"
+          name: "image"
+          attachmentUrl: "${orderedFoodImage}"
+      processUserMessage: false
+    transitions:
+      return: "done"
+  HandleUnexpectedAction:
+    component: "System.Switch"
+    properties:
+      variable: "user.botsUnexpectedAction"
+      values:
+      - "food"
+      - "beverages"
+      - "order"
+    transitions:
+      actions:
+        NONE: "ActionNoLongerAvailable"
+        food: "OrderFood"
+        beverages: "OrderBeverages"
+        order: "AskItemSize"
+  ActionNoLongerAvailable:
+    component: "System.Output"
+    properties:
+      text: "Sorry, this action is no longer available"
+    transitions:
+      return: "done"
+  DefaultErrorHandler:
+    component: "System.Output"
+    properties:
+      text: "Unexpected error occurred, please contact the helpdesk"
+    transitions:
+      return: "done"
+  exitFlow:
+    component: "System.Output"
+    properties:
+      text: "Alright. Have a nice day!"
+      keepTurn: true
+    transitions: {} 
